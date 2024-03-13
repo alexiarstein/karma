@@ -26,17 +26,21 @@ async def on_message(message):
     
     await bot.process_commands(message)
 
+# Corrects !karma without args to display only the top 5 entries and not the whole database. 
+# Issue: https://github.com/alexiarstein/karma/issues/2
 async def handle_karma_command(message):
     if message.content == '!karma':
-        # Display top entries
-        sorted_karma = sorted(karma_data.items(), key=lambda x: x[1], reverse=True)
+        # Display top 5 entries
+        sorted_karma = sorted(karma_data.items(), key=lambda x: x[1], reverse=True)[:5]
         top_entries = '\n'.join([f'{entry}: {score}' for entry, score in sorted_karma])
-        await message.channel.send(f'Lo mas bello:\n{top_entries}')
+        await message.channel.send(f'Top 5 del karma más bello:\n{top_entries}')
     else:
         # Display karma for a specific entry
         entry = message.content[len('!karma '):]
         karma_score = karma_data.get(entry, 0)
         await message.channel.send(f'Karma para {entry}: {karma_score}')
+
+
 
 def update_karma(message):
     # Parse message for karma updates
