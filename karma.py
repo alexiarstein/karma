@@ -45,15 +45,30 @@ async def handle_karma_command(message):
 def update_karma(message):
     # Parse message for karma updates
     words = message.content.split()
-    for word in words:
-        if word.endswith('++'):
-            entry = word[:-2]  # Remove '++'
-            karma_data[entry] = karma_data.get(entry, 0) + 1
-            save_karma_data()
-        elif word.endswith('--'):
-            entry = word[:-2]  # Remove '--'
-            karma_data[entry] = karma_data.get(entry, 0) - 1
-            save_karma_data()
+
+    # Parse message for karma updates
+    words = message.content.split()[1:]
+    # define action to store the add or substraction
+    action = ""
+    # variable that holds the desired tech, person or thing to value
+    entry = ""
+
+    # if the content of the message contains an space, or the same
+    # that is has more than one word
+    if len(words) >= 2:
+        action = words[-1][-2:]
+        # join all words except the last one
+        entry = f"{' '.join(words[:-1])} {words[-1][:-2]}"
+    else:
+        entry = words[0][:-2]
+        action = words[0][-2:]
+
+    if action =='++':
+        karma_data[entry] = karma_data.get(entry, 0) + 1
+        save_karma_data()
+    elif action == '--':
+        karma_data[entry] = karma_data.get(entry, 0) - 1
+        save_karma_data()
 
 def save_karma_data():
     # Save karma data to the file
