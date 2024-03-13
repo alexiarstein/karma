@@ -3,6 +3,7 @@
 # Use: integrate as part of an existing discord bot in python
 # License: GNU GPL v3 (See LICENSE / COPYING for more info)
 
+import re
 
 # Karma database file
 karma_file = 'karma.txt'
@@ -44,16 +45,12 @@ async def handle_karma_command(message):
 
 def update_karma(message):
     # Parse message for karma updates
-    words = message.content.split()
+    words = re.findall(r'\b[\w\s]+(?:\+\+)|\b[\w\s]+(?:\-\-)', message.content)
     for word in words:
-        if word.endswith('++'):
-            entry = word[:-2]  # Remove '++'
-            karma_data[entry] = karma_data.get(entry, 0) + 1
-            save_karma_data()
-        elif word.endswith('--'):
-            entry = word[:-2]  # Remove '--'
-            karma_data[entry] = karma_data.get(entry, 0) - 1
-            save_karma_data()
+        karma_modifier = 1 if word.endswith('++') else -1  
+        entry = word[:-2]  
+        karma_data[entry] = karma_data.get(entry, 0) + karma_modifier  
+        save_karma_data()
 
 def save_karma_data():
     # Save karma data to the file
