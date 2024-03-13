@@ -2,6 +2,10 @@
 Fun implementation for discord bots in python. It gives certain words a positive or negative value
 
 
+## Example
+
+![Karma](karma-example.png)
+
 ## Usage
 
 In a discord chat, give props to a word, a name, a piece of software or anything you support or like, for example:
